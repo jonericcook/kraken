@@ -3,10 +3,13 @@ defmodule Kraken.CustomerlessTransactions.CustomerlessTransaction do
 
   use Ecto.Schema
 
-  schema "customerless_transactions" do
-    field(:txid, :string)
-    field(:amount, :float)
+  # https://bitcoin.stackexchange.com/questions/75300/what-would-happened-if-two-transactions-have-the-same-hash
 
-    timestamps()
+  schema "customerless_transactions" do
+    field(:blockhash, :string)
+    field(:blockindex, :integer)
+    field(:txid, :string)
+    field(:vout, :integer)
+    field(:amount, :float)
   end
 end

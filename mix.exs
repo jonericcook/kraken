@@ -7,6 +7,7 @@ defmodule Kraken.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -16,6 +17,13 @@ defmodule Kraken.MixProject do
     [
       extra_applications: [:logger],
       mod: {Kraken.Application, []}
+    ]
+  end
+
+  defp aliases do
+    [
+      # Ensures database is reset before tests are run
+      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"]
     ]
   end
 

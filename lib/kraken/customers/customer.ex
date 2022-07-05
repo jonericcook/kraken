@@ -7,7 +7,5 @@ defmodule Kraken.Customers.Customer do
     field(:name, :string)
     field(:address, :string)
     has_many(:customer_transactions, Kraken.CustomerTransactions.CustomerTransaction)
-
-    timestamps()
   end
 end

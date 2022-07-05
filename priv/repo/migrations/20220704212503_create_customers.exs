@@ -5,7 +5,6 @@ defmodule Kraken.Repo.Migrations.CreateCustomers do
     create table(:customers) do
       add :name, :string
       add :address, :string
-      timestamps()
     end
   end
 end

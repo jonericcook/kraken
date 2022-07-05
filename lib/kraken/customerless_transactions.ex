@@ -1,11 +1,11 @@
 defmodule Kraken.CustomerlessTransactions do
-  import Ecto.Query
+  # import Ecto.Query
 
   alias Kraken.Repo
   alias Kraken.CustomerlessTransactions.CustomerlessTransaction
 
-  def create(txid, amount) do
-    Repo.insert!(%CustomerlessTransaction{txid: txid, amount: amount})
+  def create(customerless_transactions) do
+    Repo.insert_all(CustomerlessTransaction, customerless_transactions)
   end
 
   def get_all() do

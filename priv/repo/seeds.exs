@@ -2,7 +2,7 @@ alias Kraken.Repo
 alias Kraken.Customers
 alias Kraken.Customers.Customer
 alias Kraken.CustomerTransactions.CustomerTransaction
-alias Kraken.CustomerTransactions.CustomerlessTransaction
+alias Kraken.CustomerlessTransactions.CustomerlessTransaction
 
 Repo.delete_all(Customer)
 Repo.delete_all(CustomerTransaction)
