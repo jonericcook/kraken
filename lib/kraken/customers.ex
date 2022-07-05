@@ -1,12 +1,9 @@
 defmodule Kraken.Customers do
-  # import Ecto.Query
   alias Kraken.Customers.Customer
   alias Kraken.Repo
 
-  def create_customer(attrs) do
-    %Customer{}
-    |> Customer.changeset(attrs)
-    |> Repo.insert()
+  def create(name, address) do
+    Repo.insert!(%Customer{name: name, address: address})
   end
 
   def get_by_address(address) do

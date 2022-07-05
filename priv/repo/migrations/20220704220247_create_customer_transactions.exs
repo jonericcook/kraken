@@ -3,7 +3,7 @@ defmodule Kraken.Repo.Migrations.CreateCustomerTransactions do
 
   def change do
     create table(:customer_transactions) do
-      add :transaction_hash, :string
+      add :txid, :string
       add :amount, :float
       add :customer_id, references(:customers)
       timestamps()
