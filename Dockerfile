@@ -9,8 +9,12 @@ RUN mkdir /app
 COPY . /app
 WORKDIR /app
 
-# Install Hex package manager.
+# Install Hex and Rebar package manager.
 RUN mix local.hex --force
+RUN mix local.rebar --force
+
+#Fetch dependencies
+RUN mix deps.get
 
 # Compile the project.
 RUN mix do compile
