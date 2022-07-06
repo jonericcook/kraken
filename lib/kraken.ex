@@ -15,8 +15,8 @@ defmodule Kraken do
   @valid_deposit_confirmations 6
 
   def go do
-    Repo.delete_all(Customer)
     Repo.delete_all(CustomerTransaction)
+    Repo.delete_all(Customer)
     Repo.delete_all(CustomerlessTransaction)
 
     Customers.create("Wesley Crusher", "mvd6qFeVkqH6MNAS2Y2cLifbdaX5XUkbZJ")
