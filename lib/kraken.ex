@@ -30,17 +30,20 @@ defmodule Kraken do
     for file_name <- @transaction_files do
       %{"transactions" => transactions} = read_json_file(file_name)
       valid_transactions = select_valid_receive_transactions(transactions)
-      customers = get_customer_ids_from_addresses(valid_transactions)
-      customer_address_to_id = gather_customer_addresses(customers)
+      customer_address_to_id = get_customer_ids_from_addresses(valid_transactions)
 
       %{
         customer_transactions: customer_transactions,
         customerless_transactions: customerless_transactions
       } = format_transactions(valid_transactions, customer_address_to_id)
 
-      CustomerTransactions.create(customer_transactions)
+      for ct <- customer_transactions do
+        CustomerTransactions.maybe_create(ct)
+      end
 
-      CustomerlessTransactions.create(customerless_transactions)
+      for ct <- customerless_transactions do
+        CustomerlessTransactions.maybe_create(ct)
+      end
     end
 
     customer_transactions_report = Report.customer_transactions()
@@ -188,10 +191,7 @@ defmodule Kraken do
     valid_transactions
     |> Map.keys()
     |> Customers.get_by_addresses()
-  end
-
-  defp gather_customer_addresses(customers) do
-    Enum.reduce(customers, %{}, fn c, acc ->
+    |> Enum.reduce(%{}, fn c, acc ->
       Map.put(acc, c.address, c.id)
     end)
   end
