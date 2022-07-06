@@ -105,7 +105,7 @@ defmodule Kraken do
     IO.puts("\n\n")
   end
 
-  def format_transactions(valid_transactions, customer_address_to_id) do
+  defp format_transactions(valid_transactions, customer_address_to_id) do
     addresses = Map.keys(valid_transactions)
 
     Enum.reduce(
@@ -136,7 +136,7 @@ defmodule Kraken do
     )
   end
 
-  def select_valid_receive_transactions(transactions) do
+  defp select_valid_receive_transactions(transactions) do
     Enum.reduce(transactions, %{}, &select_valid_receive_transaction/2)
   end
 
@@ -184,95 +184,25 @@ defmodule Kraken do
 
   defp select_valid_receive_transaction(_, acc), do: acc
 
-  def get_customer_ids_from_addresses(valid_transactions) do
+  defp get_customer_ids_from_addresses(valid_transactions) do
     valid_transactions
     |> Map.keys()
     |> Customers.get_by_addresses()
   end
 
-  def gather_customer_addresses(customers) do
+  defp gather_customer_addresses(customers) do
     Enum.reduce(customers, %{}, fn c, acc ->
       Map.put(acc, c.address, c.id)
     end)
   end
 
-  def add_customer_id(customer_id, partial_customer_transactions) do
+  defp add_customer_id(customer_id, partial_customer_transactions) do
     Enum.map(partial_customer_transactions, fn ct ->
       Map.put(ct, :customer_id, customer_id)
     end)
   end
 
-  def read_json_file(filename) do
+  defp read_json_file(filename) do
     with {:ok, body} <- File.read(filename), do: Jason.decode!(body)
   end
-
-  def some do
-  end
 end
-
-# one = read_json_file(Enum.at(@transaction_files, 0))
-# two = read_json_file(Enum.at(@transaction_files, 1))
-# all_txs = one["transactions"] ++ two["transactions"]
-
-# Enum.each(all_txs, fn %{"amount" => amount} ->
-#   IO.inspect(amount)
-# end)
-# IO.inspect(Enum.count(all_txs), label: "al txs")
-
-# Enum.each(all_txs, fn %{"address" => address, "category" => category} ->
-#   if category == "send" do
-#     IO.inspect(Customers.get_by_address(address), label: "SEND")
-#   end
-
-#   if category == "generate" do
-#     IO.inspect(Customers.get_by_address(address), label: "GENERATE")
-#   end
-
-#   if category == "immature" do
-#     IO.inspect(Customers.get_by_address(address), label: "IMMATURE")
-#   end
-
-#   if category == "orphan" do
-#     IO.inspect(Customers.get_by_address(address), label: "ORPHAN")
-#   end
-# end)
-# all_txids =
-#   Enum.reduce(all_txs, [], fn x, acc ->
-#     acc ++ [x["txid"]]
-#   end)
-
-# IO.inspect(Enum.count(all_txids), label: "all tx ids count")
-# IO.inspect(Enum.dedup(all_txids) |> Enum.count(), label: "dedup tx ids")
-
-# defp process_transactions(transactions) do
-#   Enum.each(transactions, fn t ->
-#     process_transaction(t)
-#   end)
-# end
-
-# defp process_transaction(%{
-#        "address" => address,
-#        "category" => "receive",
-#        "amount" => amount,
-#        "confirmations" => confirmations,
-#        "txid" => txid
-#      })
-#      when confirmations >= @valid_deposit_confirmations do
-#   address
-#   |> Customers.get_by_address()
-#   |> record_transaction(txid, amount)
-# end
-
-# defp process_transaction(_), do: :ok
-
-# defp record_transaction(nil, txid, amount) do
-#   with %CustomerlessTransaction{} <- CustomerlessTransactions.create(txid, amount) do
-#     :ok
-#   end
-# end
-
-# defp record_transaction(%Customer{id: customer_id}, txid, amount) do
-#   with %CustomerTransaction{} <- CustomerTransactions.create(txid, amount, customer_id) do
-#     :ok
-#   end
-# end
