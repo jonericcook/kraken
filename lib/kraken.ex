@@ -2,8 +2,12 @@ defmodule Kraken do
   @moduledoc false
 
   alias Kraken.Customers
+  alias Kraken.Customers.Customer
   alias Kraken.CustomerTransactions
+  alias Kraken.CustomerTransactions.CustomerTransaction
   alias Kraken.CustomerlessTransactions
+  alias Kraken.CustomerlessTransactions.CustomerlessTransaction
+  alias Kraken.Repo
   alias Kraken.Report
 
   @transaction_files ["transactions-1.json", "transactions-2.json"]
@@ -11,6 +15,18 @@ defmodule Kraken do
   @valid_deposit_confirmations 6
 
   def go do
+    Repo.delete_all(Customer)
+    Repo.delete_all(CustomerTransaction)
+    Repo.delete_all(CustomerlessTransaction)
+
+    Customers.create("Wesley Crusher", "mvd6qFeVkqH6MNAS2Y2cLifbdaX5XUkbZJ")
+    Customers.create("Leonard McCoy", "mmFFG4jqAtw9MoCC88hw5FNfreQWuEHADp")
+    Customers.create("Jonathan Archer", "mzzg8fvHXydKs8j9D2a8t7KpSXpGgAnk4n")
+    Customers.create("Jadzia Dax", "2N1SP7r92ZZJvYKG2oNtzPwYnzw62up7mTo")
+    Customers.create("Montgomery Scott", "mutrAf4usv3HKNdpLwVD4ow2oLArL6Rez8")
+    Customers.create("James T. Kirk", "miTHhiX3iFhVnAEecLjybxvV5g8mKYTtnM")
+    Customers.create("Spock", "mvcyJMiAcSXKAEsQxbW9TYZ369rsMG6rVV")
+
     for file_name <- @transaction_files do
       %{"transactions" => transactions} = read_json_file(file_name)
       valid_transactions = select_valid_receive_transactions(transactions)
@@ -48,6 +64,8 @@ defmodule Kraken do
          max_deposit,
          min_deposit
        ) do
+    IO.puts("\n\n")
+
     IO.puts(
       "Deposited for Wesley Crusher: count=#{customer_transactions_report["Wesley Crusher"].count} sum=#{Float.round(customer_transactions_report["Wesley Crusher"].sum, 8)}"
     )
@@ -81,7 +99,10 @@ defmodule Kraken do
     )
 
     IO.puts("Smallest valid deposit: #{Float.round(min_deposit, 8)}")
+
     IO.puts("Largest valid deposit: #{Float.round(max_deposit, 8)}")
+
+    IO.puts("\n\n")
   end
 
   def format_transactions(valid_transactions, customer_address_to_id) do
@@ -183,6 +204,9 @@ defmodule Kraken do
 
   def read_json_file(filename) do
     with {:ok, body} <- File.read(filename), do: Jason.decode!(body)
+  end
+
+  def some do
   end
 end
 

@@ -4,7 +4,8 @@ config :kraken, Kraken.Repo,
   database: "kraken_repo",
   username: "postgres",
   password: "postgres",
-  hostname: "localhost"
+  hostname: "localhost",
+  log: false
 
 config :kraken,
   ecto_repos: [Kraken.Repo]
